@@ -10,7 +10,7 @@ mydb = mysql.connector.connect(
     user = 'root',
     password = key, 
     port = '3306',
-    database = '' # TODO: Enter database name
+    database = 'mydb' 
 )
 
 mycursor = mydb.cursor() 
