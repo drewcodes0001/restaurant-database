@@ -9,4 +9,5 @@ Setting up the key variable to hold your MySQL password
 2. The `.gitignore` file should exlude the .env file from commits
 
 
-To run the add data website, try running the python script, then use `flask run`
+To run the add data website, try running the python script, then use `flask run`. 
+Add `FLASK_APP="mysql_connector.py"` to your `.env`
