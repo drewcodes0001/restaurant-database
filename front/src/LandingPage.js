@@ -59,7 +59,21 @@ const LandingPage = () => {
               py: 2,
             }}
           >
-            Get Started Today
+            Employees
+          </Button>
+           <Button
+            variant="contained"
+            size="large"
+            onClick={() => navigate('/shifts')}
+            sx={{
+              backgroundColor: 'white',
+              color: '#1e3c72',
+              
+              px: 6,
+              py: 2,
+            }}
+          >
+            Shifts
           </Button>
         </Box>
       </Container>

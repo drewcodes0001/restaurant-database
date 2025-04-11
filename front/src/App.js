@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './LandingPage';
 import EmployeeManagement from './EmployeeManagement';
 import { Box } from '@mui/material';
+import ShiftManager from './ShiftManager';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/employees" element={<EmployeeManagement />} />
+        <Route path="/shifts" element={<ShiftManager />} />
       </Routes>
     </Router>
     </Box>
