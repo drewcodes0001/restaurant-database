@@ -1,5 +1,5 @@
 # restaurant-database
-## Setting up the DBMS connection
+## Trouble Shooting
 ---
 You might have to do `pip install mysql-connector-python` if you run into an error `ModuleNotFoundError: No module named 'mysql'`
 
@@ -11,3 +11,10 @@ Setting up the key variable to hold your MySQL password
 
 To run the add data website, try running the python script, then use `flask run`. 
 Add `FLASK_APP="mysql_connector.py"` to your `.env`
+
+## Setting up the DBMS connection
+--- 
+1. In your `.env` file add:
+    - `ENDPOINT=<endpoint link>`
+    - `USERNAME=<username>`
+    - Update `MYSQL_PASSWORD`
