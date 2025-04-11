@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import { Input, Typography } from '@mui/material';
-
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Grid,
+} from '@mui/material';
 
 function AddEmployeeForm() {
   const [employee, setEmployee] = useState({
@@ -9,7 +13,7 @@ function AddEmployeeForm() {
     username: '',
     password: '',
     fullname: '',
-    wage: ''
+    wage: '',
   });
 
   const handleChange = (e) => {
@@ -18,35 +22,96 @@ function AddEmployeeForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(employee),
+      });
 
-    // Adjust the URL as needed (if Flask is hosted on a different port)
-    const response = await fetch('http://localhost:5000/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(employee)
-    });
-
-    if (response.ok) {
-      alert('Employee added successfully');
-      // Optionally reset the form here
-      setEmployee({ id: '', username: '', password: '', fullname: '', wage: '' });
-    } else {
-      alert('Error adding employee');
+      if (response.ok) {
+        alert('Employee added successfully');
+        setEmployee({ id: '', username: '', password: '', fullname: '', wage: '' });
+      } else {
+        alert('Error adding employee');
+      }
+    } catch (error) {
+      alert('Error connecting to server');
     }
   };
 
   return (
-    <Box sx= {{alignContent: 'center', display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center', top: '100px'}}>
-      <Typography variant="h4" textAlign='center' color='white'> Add Employee</Typography>
+    <Box>
+      <Typography variant="h4" gutterBottom sx={{ color: '#1e3c72' }}>
+        Add Employee
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <input type="text" color= 'white' name="id" placeholder="Id" value={employee.id} onChange={handleChange} />
-        <input type="text" name="username" placeholder="Username" value={employee.username} onChange={handleChange} />
-        <input type="text" name="password" placeholder="Password" value={employee.password} onChange={handleChange} />
-        <input type="text" name="fullname" placeholder="Full Name" value={employee.fullname} onChange={handleChange} />
-        <input type="text" name="wage" placeholder="Wage" value={employee.wage} onChange={handleChange} />
-        <input type="submit" value="Submit" />
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="ID"
+              name="id"
+              value={employee.id}
+              onChange={handleChange}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Username"
+              name="username"
+              value={employee.username}
+              onChange={handleChange}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Password"
+              name="password"
+              type="password"
+              value={employee.password}
+              onChange={handleChange}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Full Name"
+              name="fullname"
+              value={employee.fullname}
+              onChange={handleChange}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Wage"
+              name="wage"
+              type="number"
+              value={employee.wage}
+              onChange={handleChange}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              Add Employee
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </Box>
   );

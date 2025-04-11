@@ -1,23 +1,63 @@
 import React from 'react';
+import { Box, Container, Paper, Typography, Button } from '@mui/material';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import AddEmployeeForm from './AddEmployeeForm';
 import RemoveEmployeeForm from './RemoveEmployeeForm';
-import { Box, Typography } from '@mui/material';
-import backimg from './img.jpeg';
 
 const EmployeeManagement = () => {
+  const navigate = useNavigate();
+
   return (
-    <Box sx={{ p: 4,  justifyContent: 'center', alignItems: 'center', display: 'flex',
-        flexDirection: 'column', backgroundSize: 'cover',     
-        backgroundPosition: 'center',     
-        backgroundRepeat: 'no-repeat',
-       
-        
-        width: '100%', }} >
-      <Typography variant="h2" gutterBottom color='white'>
-        Employee Management
-      </Typography>
-      <AddEmployeeForm />
-      <RemoveEmployeeForm />
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
+        py: 4,
+      }}
+    >
+      <Container maxWidth="md">
+        <Button
+          startIcon={<ArrowLeft />}
+          onClick={() => navigate('/')}
+          sx={{ color: 'white', mb: 4 }}
+        >
+          Back to Home
+        </Button>
+        <Typography
+          variant="h2"
+          sx={{
+            color: 'white',
+            textAlign: 'center',
+            mb: 6,
+            textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          }}
+        >
+          Employee Management
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <Paper
+            
+            sx={{
+              p: 4,
+              
+              backgroundColor: 'white',
+            }}
+          >
+            <AddEmployeeForm />
+          </Paper>
+          <Paper
+            
+            sx={{
+              p: 4,
+              
+              backgroundColor: 'white',
+            }}
+          >
+            <RemoveEmployeeForm />
+          </Paper>
+        </Box>
+      </Container>
     </Box>
   );
 };

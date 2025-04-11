@@ -1,41 +1,67 @@
-// src/components/RemoveEmployeeForm.js
 import React, { useState } from 'react';
-import { Typography } from '@mui/material';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Grid,
+} from '@mui/material';
 
 function RemoveEmployeeForm() {
   const [idToRemove, setIdToRemove] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_remove: idToRemove }),
+      });
 
-    const response = await fetch('http://localhost:5000/delete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id_remove: idToRemove })
-    });
-
-    if (response.ok) {
-      alert('Employee removed successfully');
-      setIdToRemove('');
-    } else {
-      alert('Error removing employee');
+      if (response.ok) {
+        alert('Employee removed successfully');
+        setIdToRemove('');
+      } else {
+        alert('Error removing employee');
+      }
+    } catch (error) {
+      alert('Error connecting to server');
     }
   };
 
   return (
-    <div>
-      <Typography variant="h4" textAlign='center' color='white'> Remove Employee</Typography>
+    <Box>
+      <Typography variant="h4" gutterBottom sx={{ color: '#1e3c72' }}>
+        Remove Employee
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="id_remove"
-          placeholder="Id"
-          value={idToRemove}
-          onChange={(e) => setIdToRemove(e.target.value)}
-        />
-        <input type="submit" value="Submit" />
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Employee ID"
+              name="id_remove"
+              value={idToRemove}
+              onChange={(e) => setIdToRemove(e.target.value)}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="error"
+              size="large"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              Remove Employee
+            </Button>
+          </Grid>
+        </Grid>
       </form>
-    </div>
+    </Box>
   );
 }
 
