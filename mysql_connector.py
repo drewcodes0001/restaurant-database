@@ -112,3 +112,53 @@ def delete_shift():
     conn.commit()
     conn.close()
     return jsonify({"message": "Shift removed successfully"}), 200
+
+
+def add_ingredient_to_menu():
+    data = request.get_json() 
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+      
+    ing_id = data.get('ing_id')
+    name = data.get('name')
+    shelf_life = data.get('shelf_life')
+    
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Ingredient (ing_id, name, shelf_life) VALUES (%s, %s, %s)", (ing_id,name,shelf_life))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Ingredient added to menu successfully"}), 200
+
+def add_dish_to_menu():
+    data = request.get_json() 
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+      
+    dish_id = data.get('dish_id')
+    name = data.get('name')
+    price = data.get('price')
+    
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Dish (dish_id, price, name) VALUES (%s, %s, %s)", (dish_id,price,name))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Dish added to menu successfully"}), 200
+
+
+def add_ingredient_to_dish():
+    data = request.get_json() 
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+      
+    dish_name = data.get('dish_name')
+    ing_name = data.get('ing_name')
+    
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Dish_ingredient(d_id,i_id) VALUES (SELECT dish_id FROM Dish WHERE name=%s, SELECT ing_id FROM Ingreident WHERE name=%s)", (dish_name,ing_name))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Dish added to menu successfully"}), 200
+    
