@@ -114,7 +114,7 @@ def delete_shift():
     return jsonify({"message": "Shift removed successfully"}), 200
 
 
-def add_ingredient_to_menu():
+def add_ingredient_to_stock():
     data = request.get_json() 
     if not data:
         return jsonify({"error": "No data provided"}), 400
@@ -158,7 +158,7 @@ def add_ingredient_to_dish():
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO dish_ingredient(dish_id,ingredient_id) VALUES (SELECT dish_id FROM dishes WHERE name=%s, SELECT ingredient_id FROM ingreidents WHERE name=%s)", (dish_name,ing_name))
+    cursor.execute("INSERT INTO dish_ingredients(dish_id,ingredient_id) VALUES (SELECT dish_id FROM dishes WHERE name=%s, SELECT ingredient_id FROM ingreidents WHERE name=%s)", (dish_name,ing_name))
     conn.commit()
     conn.close()
     return jsonify({"message": "Dish added to menu successfully"}), 200
@@ -185,11 +185,11 @@ def calculate_order_price():
     if not data:
         return jsonify({"error": "No data provided"}), 400
       
-    dish_name = data.get('order_id')
-    
+    order_id = data.get('order_id')
+    dish_name = data.get('dish_name')
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Order_Dish(o_id,d_id) VALUES (%s,SELECT dish_id FROM Dish WHERE name=%s)", (order_id,dish_name))
+    cursor.execute("INSERT INTO Order_Dishes(order_id,dish_id) VALUES (%s,SELECT dish_id FROM Dish WHERE name=%s)", (order_id,dish_name))
     conn.commit()
     conn.close()
     return jsonify({"message": "Dish added to order successfully"}), 200
