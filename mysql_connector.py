@@ -4,34 +4,33 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_cors import CORS
 
-
-
-
 load_dotenv()
-key = os.getenv("MYSQL_PASSWORD") # create a .env file with your MySQL password
+endpoint = os.getenv("ENDPOINT") 
+username = os.getenv("USERNAME")
+key = os.getenv("MYSQL_PASSWORD")
 
-mydb = mysql.connector.connect(
-    host = 'localhost',
-    user = 'root',
-    password = key, 
-    port = '3306',
-    database = 'mydb' 
-)
-
-mycursor = mydb.cursor() 
-mycursor.execute("SHOW TABLES")
-for table in mycursor:
-    print(table)
+try:
+    mydb = mysql.connector.connect(
+        host=endpoint,
+        user=username,
+        password=key,
+        port='3306',
+        database='restaurant_database'
+    )
+    print("Connected to Amazon RDS successfully")
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
+    exit()
 
 #flask instance
 app = Flask(__name__)
 CORS(app)
 
 config = {
-    'host' : 'localhost',
-    'user' : 'root',
+    'host' : endpoint,
+    'user' : username,
     'password' : key, 
-    'database' : 'mydb'
+    'database' : 'restaurant_database'
     
 }
 
@@ -48,14 +47,15 @@ def add():
     id = data.get('id')
     username = data.get('username')
     password = data.get('password')
-    fullname = data.get('fullname')
+    full_name = data.get('fullname')
     wage = data.get('wage')
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO employee (employee_id, username, password, Full_name, wage) VALUES (%s, %s, %s, %s, %s)",
-        (id, username, password, fullname, wage)
+        "INSERT INTO employees (employee_id, username, password, full_name, wage) VALUES "
+        "(%s, %s, %s, %s, %s)",
+        (id, username, password, full_name, wage)
     )
     conn.commit()
     conn.close()
@@ -71,7 +71,7 @@ def delete():
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM employee WHERE employee_id = (%s)", (id,))
+    cursor.execute("DELETE FROM employees WHERE employee_id = (%s)", (id,))
     conn.commit()
     conn.close()
     return jsonify({"message": "Employee removed successfully"}), 200
@@ -84,15 +84,15 @@ def add_shift():
         return jsonify({"error": "No data provided"}), 400
 
     shift_id = data.get('shift_id')
-    date = data.get('date')
+    shift_date = data.get('shift_date')
     duration = data.get('duration')
     
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO Shift (Shift_id, Date, Duration) VALUES (%s, %s, %s)",
-        (shift_id, date, duration)
+        "INSERT INTO shifts (shift_id, shift_date, duration) VALUES (%s, %s, %s)",
+        (shift_id, shift_date, duration)
     )
     conn.commit()
     conn.close()
@@ -108,7 +108,7 @@ def delete_shift():
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM Shift WHERE Shift_ID = (%s)", (shift_id,))
+    cursor.execute("DELETE FROM shifts WHERE shift_id = (%s)", (shift_id,))
     conn.commit()
     conn.close()
     return jsonify({"message": "Shift removed successfully"}), 200
@@ -119,13 +119,14 @@ def add_ingredient_to_menu():
     if not data:
         return jsonify({"error": "No data provided"}), 400
       
-    ing_id = data.get('ing_id')
+    ingredient_id = data.get('ing_id')
     name = data.get('name')
     shelf_life = data.get('shelf_life')
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Ingredient (ing_id, name, shelf_life) VALUES (%s, %s, %s)", (ing_id,name,shelf_life))
+    cursor.execute("INSERT INTO ingredients (ingredient_id, name, shelf_life) VALUES (%s, %s, %s)", 
+                   (ingredient_id, name, shelf_life))
     conn.commit()
     conn.close()
     return jsonify({"message": "Ingredient added to menu successfully"}), 200
@@ -141,7 +142,7 @@ def add_dish_to_menu():
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Dish (dish_id, price, name) VALUES (%s, %s, %s)", (dish_id,price,name))
+    cursor.execute("INSERT INTO dishes (dish_id, price, name) VALUES (%s, %s, %s)", (dish_id,price,name))
     conn.commit()
     conn.close()
     return jsonify({"message": "Dish added to menu successfully"}), 200
@@ -157,7 +158,7 @@ def add_ingredient_to_dish():
     
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Dish_ingredient(d_id,i_id) VALUES (SELECT dish_id FROM Dish WHERE name=%s, SELECT ing_id FROM Ingreident WHERE name=%s)", (dish_name,ing_name))
+    cursor.execute("INSERT INTO dish_ingredient(dish_id,ingredient_id) VALUES (SELECT dish_id FROM dishes WHERE name=%s, SELECT ingredient_id FROM ingreidents WHERE name=%s)", (dish_name,ing_name))
     conn.commit()
     conn.close()
     return jsonify({"message": "Dish added to menu successfully"}), 200
