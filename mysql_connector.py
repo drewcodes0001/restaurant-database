@@ -161,4 +161,45 @@ def add_ingredient_to_dish():
     conn.commit()
     conn.close()
     return jsonify({"message": "Dish added to menu successfully"}), 200
+
+
+def add_dish_to_order():
+    data = request.get_json() 
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+      
+    dish_name = data.get('dish_name')
+    order_id = data.get('order_id')
+    
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Order_Dish(o_id,d_id) VALUES (%s,SELECT dish_id FROM Dish WHERE name=%s)", (order_id,dish_name))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Dish added to order successfully"}), 200
+
+
+def calculate_order_price():
+    data = request.get_json() 
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+      
+    dish_name = data.get('order_id')
+    
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Order_Dish(o_id,d_id) VALUES (%s,SELECT dish_id FROM Dish WHERE name=%s)", (order_id,dish_name))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Dish added to order successfully"}), 200
+
+def view_orders():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Order")
+    for (order_id, status, total_price, emp_id,cust_id) in cursor:
+        print("Order id: {}, Status: {}, Total Price: {}, Employee id: {}, Customer id:{} ".format(
+            order_id, status, total_price, emp_id,cust_id))
+    conn.close()
+    return jsonify({"message": ""}), 200
     
