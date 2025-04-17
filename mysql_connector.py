@@ -203,4 +203,34 @@ def view_orders():
             order_id, status, total_price, emp_id,cust_id))
     conn.close()
     return jsonify({"message": ""}), 200
+
+def view_dishes():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Dishes")
+    for (dish_id,name,price) in cursor:
+        print("Dish id: {}, Name: {}, Price: {}".format(
+            dish_id, name, price))
+    conn.close()
+    return jsonify({"message": ""}), 200
+
+def view_menu():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Dishes")
+    for (name,price) in cursor:
+        print("Name: {}, Price: {}".format(
+            name, price))
+    conn.close()
+    return jsonify({"message": ""}), 200
+
+def view_ingredients():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Ingredients")
+    for (ingredient_id,name, shelf_life) in cursor:
+        print("Ingredient id: {}, Name: {}, Shelf life: {}".format(
+            ingredient_id, name, shelf_life))
+    conn.close()
+    return jsonify({"message": ""}), 200
     
