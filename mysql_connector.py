@@ -198,9 +198,9 @@ def view_orders():
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Order")
-    for (order_id, status, total_price, emp_id,cust_id) in cursor:
-        print("Order id: {}, Status: {}, Total Price: {}, Employee id: {}, Customer id:{} ".format(
-            order_id, status, total_price, emp_id,cust_id))
+    myresult = cursor.fetchall()
+    for x in myresult:
+        print(x)
     conn.close()
     return jsonify({"message": ""}), 200
 
@@ -208,9 +208,9 @@ def view_dishes():
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Dishes")
-    for (dish_id,name,price) in cursor:
-        print("Dish id: {}, Name: {}, Price: {}".format(
-            dish_id, name, price))
+    myresult = cursor.fetchall()
+    for x in myresult:
+        print(x)
     conn.close()
     return jsonify({"message": ""}), 200
 
@@ -228,9 +228,242 @@ def view_ingredients():
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Ingredients")
-    for (ingredient_id,name, shelf_life) in cursor:
-        print("Ingredient id: {}, Name: {}, Shelf life: {}".format(
-            ingredient_id, name, shelf_life))
+    
+    myresult = cursor.fetchall()
+    for x in myresult:
+        print(x)
     conn.close()
     return jsonify({"message": ""}), 200
     
+    
+    
+    
+#Statistics
+
+
+#Employee
+
+
+def count_employees():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Employees")
+    (result,) = cursor.fetchone()
+    print(f"Number of Employees = {result}")
+    conn.close()
+    return jsonify({"employee_count": result}), 200
+
+def avg_salary():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT AVG(wage) FROM Employees")
+    (result,) = cursor.fetchone()
+    print(f"Average Wage of Employees = {result}")
+    conn.close()
+    return jsonify({"avg_salary": result}), 200
+
+def max_salary():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MAX(wage) FROM Employees")
+    (result,) = cursor.fetchone()
+    print(f"Max Salary = {result}")
+    conn.close()
+    return jsonify({"max_salary": result}), 200
+
+def min_salary():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MIN(wage) FROM Employees")
+    (result,) = cursor.fetchone()
+    print(f"Min Salary = {result}")
+    conn.close()
+    return jsonify({"min_salary": result}), 200
+
+
+def sum_salary():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT SUM(wage) FROM Employees")
+    (result,) = cursor.fetchone()
+    print(f"Sum of Wages = {result}")
+    conn.close()
+    return jsonify({"sum_wages": result}), 200
+
+
+#Customer
+
+def count_customers():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Customers")
+    (result,) = cursor.fetchone()
+    print(f"Number of Customers = {result}")
+    conn.close()
+    return jsonify({"customer_count": result}), 200
+
+def avg_points():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT AVG(reward_points) FROM Customers")
+    (result,) = cursor.fetchone()
+    print(f"Average Points of Customers = {result}")
+    conn.close()
+    return jsonify({"avg_points": result}), 200
+
+def max_points():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MAX(reward_points) FROM Customers")
+    (result,) = cursor.fetchone()
+    print(f"Max Points = {result}")
+    conn.close()
+    return jsonify({"max_points": result}), 200
+
+def min_points():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MIN(reward_points) FROM Customers")
+    (result,) = cursor.fetchone()
+    print(f"Min Points = {result}")
+    conn.close()
+    return jsonify({"min_points": result}), 200
+
+def reward_eligible_customers():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Customers WHERE reward_point>50")
+    (result,) = cursor.fetchone()
+    print(f"Reward Eligible Customers = {result}")
+    conn.close()
+    return jsonify({"reward_eligible_customers": result}), 200
+    
+    
+    
+
+#Orders
+
+
+def count_preparing_orders():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Customer_orders WHERE status LIKE Preparing")
+    (result,) = cursor.fetchone()
+    print(f"Preparing Orders = {result}")
+    conn.close()
+    return jsonify({"preparing_orders": result}), 200
+
+
+def count_ready_orders():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Customer_orders WHERE status LIKE Ready")
+    (result,) = cursor.fetchone()
+    print(f"Ready Orders = {result}")
+    conn.close()
+    return jsonify({"ready_orders": result}), 200
+
+def count_received_orders():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Customer_orders WHERE status LIKE Received")
+    (result,) = cursor.fetchone()
+    print(f"Received Orders = {result}")
+    conn.close()
+    return jsonify({"received_orders": result}), 200
+
+def count_canceled_orders():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Customer_orders WHERE status LIKE Canceled")
+    (result,) = cursor.fetchone()
+    print(f"Canceled Orders = {result}")
+    conn.close()
+    return jsonify({"canceled_orders": result}), 200
+
+def count_noncanceled_orders():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Customer_orders WHERE status <> Canceled")
+    (result,) = cursor.fetchone()
+    print(f"Noncanceled Orders = {result}")
+    conn.close()
+    return jsonify({"noncanceled_orders": result}), 200
+
+def avg_price_orders():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT AVG(total_price) FROM Customer_orders")
+    (result,) = cursor.fetchone()
+    print(f"Average Order Price = {result}")
+    conn.close()
+    return jsonify({"avg_price_orders": result}), 200
+
+
+#Dishes
+
+def count_dishes():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Dishes")
+    (result,) = cursor.fetchone()
+    print(f"Number of Dishes = {result}")
+    conn.close()
+    return jsonify({"count_dishes": result}), 200
+
+def avg_price_dishes():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT AVG(price) FROM Dishes")
+    (result,) = cursor.fetchone()
+    print(f"Average Dish Price = {result}")
+    conn.close()
+    return jsonify({"average_dish_price": result}), 200
+
+def min_price_dishes():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MIN(price) FROM Dishes")
+    (result,) = cursor.fetchone()
+    print(f"Min Dish Price = {result}")
+    conn.close()
+    return jsonify({"min_dish_price": result}), 200
+
+def max_price_dishes():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MAX(price) FROM Dishes")
+    (result,) = cursor.fetchone()
+    print(f"Max Dish Price = {result}")
+    conn.close()
+    return jsonify({"max_dish_price": result}), 200
+
+
+#Ingredients
+
+def count_ingredients():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Ingredients")
+    (result,) = cursor.fetchone()
+    print(f"Number of Ingredients = {result}")
+    conn.close()
+    return jsonify({"count_ingredients": result}), 200
+
+def min_shelf_life_ingredients():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MIN(shelf_life) FROM Ingredients")
+    (result,) = cursor.fetchone()
+    print(f"Min Shelf Life of Ingredients = {result}")
+    conn.close()
+    return jsonify({"min_shelf_life_ingredients": result}), 200
+
+def max_shelf_life_ingredients():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute("SELECT MAX(shelf_life) FROM Ingredients")
+    (result,) = cursor.fetchone()
+    print(f"Max Shelf Life of Ingredients = {result}")
+    conn.close()
+    return jsonify({"max_shelf_life_ingredients": result}), 200
